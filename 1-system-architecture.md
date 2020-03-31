@@ -240,6 +240,8 @@ and a Kernel itself.
   - `telinit 0`
   - `shutdown -h +1`
   - `systemctl isolat poweroff.target`
+  - `systemctl poweroff`
+  - `shutdown -P`
 - acpid
   - Advanced configuration and power interface
   - registers system events (such as pressing the power button or closing laptop lid)
