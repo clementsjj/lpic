@@ -126,18 +126,192 @@
 
 ---
 ## Manage Shared Libraries
-
-
+- Files containing functionality that other applications can use
+- End in `.so` extension
+- Found in 
+  - `/lib`
+  - `/usr/lib` (32 bit) 
+  - `/usr/lib64` (64 bit)
+  - `/usr/local/lib`
+  - `/usr/share`
+- Two types of library files
+  - Dynamic (ends in .so)
+    - Type that is shared among multiple applpications in a system
+  - Statically linked (ends in .a)
+    - compiled for applications that need to make sure the same version of a function when a call is made 
+    - Games and graphics is common
+- Commands
+  - `ldd </bin/cp>`
+    - Prints out shared object (library) dependencies
+  - `ldconfig`
+    - Configures dynamic linker run-time bindings, creates a cache based on library directories and can show you what is currently cached
+  - `/etc/ld.so.conf`
+    - Configuratino file that points to directories and other configuration files that hold references to library directory locations
+  - `LD_LIBRARY_PATH`
+    - Legacy environment variable that points to a path where library files can be read from 
+- 
 ---
 ## Use Debian Package Management
+- Advanced Package Manager (`apt`)
+  - Ubuntu, Mint, etc.
+  - Installs applications and their **dependencies**. 
+  - Can remove packages
+  - Handles updates and upgrades
+  - How it works
+    - Reads `/etc/apt/sources.list`
+    - Directs installation and uninstall of packages ot `dpkg`
+  - Commands
+    - `/etc/apt/sources.list`
+      - Configuration file that lists out repository locations for packages
+    - `apt-get update`
+      - updates the local apt cache with a listing of packages that can be udated/upgraded and installed
+    - `apt-get upgrade`
+      - upgrades the package that have upgrades available
+    - `apt-get install`
+      - installs a package from the repositories in the sources.list file
+    - `apt-get remove`
+      - removes a package from the system but any config files that come with the package are left behind
+    - `apt-get purge`
+      - removes the package from the system and any associated configuration files
+    - `apt-get dist-upgrade`
+      - upgrades all packages on the system up to the next release of the distribution
+    - `apt-get download`
+      - downloads the package, but does not install it
+    - `apt-cache search`
+      - searches through your local apt cache for a package that can be intalled
+    - `apt-cache show`
+      - lists out basic information about a package
+    - `apt-cache showpkg`
+      - displays more technical information about a package
 
 
+- Debian Package (dpkg)
+  - Will install package but not the dependencies unless specified
+  - .deb package contents:
+    - application or utility
+    - default config files
+    - how and where to install the files that come with the package
+    - listing of dependencies the package requires
+  - Dependencies need to already be installed, or installed with the package
+    - `apt` handles dependencies for you, dpkg does not
+  - Commands: 
+    - `dpkg --info`
+      - displays info on a package
+    - `dpkg --status`
+      - same as --info, but less detail
+    - `dpkg -l`
+      - lists out packages that match the string provided
+    - `dpkg -i`
+      - installs specified package(s)
+    - `dpkg -L`
+      - lists out all files that were installed with a specified package
+    - `dpkg -r`
+      - Removes a specified package but leaves the config files behind
+    - `dpkg -P`
+      - Removes a specified package and also any config files that were installed with it
+    - `dpkg -S`
+      - searches through the package database for a file specified and lists out any mentions of the specified file or string.
+    - `dpkg-reconfigure`
+      - allows for the modificatgion of a package by re-running the application's config tool
+  
 ---
 ## Use RPM and YUM Package Management
-
+- The Yellowdog Updater, Modified (YUM)
+  - originally used for the Yellowdog Linux distro (used in PS3)
+  - Handles rpm package dependencies
+  - Used on RHEL, CentOS, Scientific Linux, and older versions of Fedora
+  - Yum Setup:
+    - Globaly yum configuration options are set in `/etc/yum.conf`
+    - Reads repository information from `/etc/yum.repos.d/`
+    - Caches latest repository information in `/var/cache/yum`
+  - Commands:
+    - `yum update`
+      - searches online repos for updated packages compared to what is currently installed on the system, upgrades packages
+    - `yum search`
+    - `yum info`
+    - `yum list installed`
+    - `yum clean all`
+    - `yum install`
+    - `yum remove`
+      - leaves dependencies
+    - `yum autoremove`
+      - uninstalls package and its dependencies
+    - `yum whatprovides`
+      - find out what package provides a specified file name
+    - `yum reinstall`
+- Other RPM Package Managers:
+  - Zypper
+    - SUSE Linux
+  - DNF - Dandified yum
+    - Used on Fedora Linux distros
+      - future replacement for yum in rhel
+    - Uses same command syntax as yum
+    
+- The Red Hat Package Manager (rpm)
+  - contains:
+    - Application or utility
+    - default config files
+    - how and where to install the files that come with the package
+    - listing of dependencies that the package requires
+  - uses rpm database located at `/var/lib/rpm`
+    - use `rpm --rebuilddb` to repair corrupted rpm database
+  - Dependencies need to already be installed or installed with the package;
+    - yum handles dependencies for you, rpm does not
+  - COMMANDS:
+    - `rpm -qpi`
+      - displays info on a package
+      - same info as yum
+    - `rpm -qpl`
+      - lists files in a package
+    - `rpm -qa`
+      - lists out all installed packages
+    - `rpm -i`
+      - installs package -- rpm -ivh gives verbose
+    - `rpm -U`
+      - upgrades installed package
+    - `rpm -e`
+      - uninstall
+    - `rpm -Va`
+      - verify all installed packages
+    - `rpm2cpio`
+      - Converts an .rpm file into a cpio archive file, often combined with the cpio command
+        - `rpm2cpio some.rpm | cpio -idmv
 
 ---
 ## Linux as a Virtual Guest
-
+- Virtualization
+  - Vm communicates with hardware and OS with Hypervisor
+  - Examples: 
+    - KVM, QEMU, VMWare, Xen, VirtualBox
+  - Full Virtualization
+    - Guest system is not aware that it is a virtual machine
+  - Paravirtualization
+    - guest system is aware that it is a virtual machine, uses guest drivers
+      - typically perform better
+  - Can be cloned
+    - may need to change a Linux system's D-Bus Machine ID
+      - `dbus-uuidgen
+        - ensures that each running kernel interacts with a system that has a unique id
+  - Often provisioned from cloud providers
+- Containers
+  - Entirely isolated set of packages, libraries, and/or applications that are completely independent from their surroundings
+  - Machine Container 
+    - shares a kernel and file system with the host computer
+  - Application Container
+     - Shares everything but the application files and library files that the application needs
+     - great for WEBSERVERS for quick expansion
+  - Examples:
+    - Docker, nspawn (from systemd), LXD, OpenShift
+- Differences:
+  - Virtualization
+    - Invented to allow the sharing yet segregation of serer instances from each other
+    - Protect one operating system from another
+    - Prevention of letting spare CPU cycles, memory, or disk space go to waste
+    - Based on emulating virtual hardware through a hypervisor
+    - heavy in terms of system requirements
+  - Containers
+    - Use shard OS
+    - more efficient in system resource terms
+    - more granular management of system resources
 
 ---
