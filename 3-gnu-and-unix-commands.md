@@ -1,5 +1,20 @@
 # GNU && UNIX Commands
 ---
+## Index
+- Bash Shell Environment
+- Bash History and the Manual Pages
+- Text Manipulation
+- Working With Files
+- Working With Directories
+- File and Folder Compression
+- Finding Files
+- File Globbing
+- Use Streams, Pipes, and Redirects
+- Create, Monitor, and Kill Processes
+- Modify Process Execution Priorities
+- Search Text Files Using Regular Expressions
+
+---
 ## Work on the Command Line
 #### Bash Shell Environment
 - Shells
